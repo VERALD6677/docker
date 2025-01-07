@@ -9,10 +9,11 @@ WORKDIR /app
 
 # Copy requirements.txt and install dependencies
 COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --timeout=120 -r requirements.txt
+
 
 # Copy the entire project into the container
 COPY . /app/
 
-# Run the Django development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Run the Django application using Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "stocks_products.wsgi:application"]
